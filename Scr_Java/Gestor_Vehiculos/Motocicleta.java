@@ -1,4 +1,4 @@
-package Gestor_Vehiculos;
+package Scr_Java.Gestor_Vehiculos;
 
 
 public class Motocicleta extends Vehiculo {

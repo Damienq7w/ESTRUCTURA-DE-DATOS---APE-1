@@ -1,4 +1,4 @@
-package Gestor_Vehiculos;
+package Scr_Java.Gestor_Vehiculos;
 
 public interface IVehiculoGestor {
     boolean registrar(Vehiculo nuevoVehiculo);
