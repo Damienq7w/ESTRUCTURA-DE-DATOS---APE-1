@@ -1,6 +1,5 @@
-/**
- * Administra el vector de estudiantes del curso (maximo 20).
- */
+package Scr_Java.Gestor_Estudiantes;
+
 public class GestorEstudiantes {
 
     public static final int MAX_ESTUDIANTES = 20;
