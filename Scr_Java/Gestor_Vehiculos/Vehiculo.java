@@ -25,7 +25,7 @@ public abstract class Vehiculo {
         System.out.println("Placa: " + placa);
         System.out.println("Marca: " + marca);
         System.out.println("Modelo: " + modelo);
-        System.out.println("Ano: " + anio);
+        System.out.println("Anio: " + anio);
         System.out.println("Precio: $" + precio);
         System.out.println("Disponible: " + (disponible ? "Si" : "No"));
     }
