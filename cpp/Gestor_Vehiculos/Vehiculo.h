@@ -1,9 +1,16 @@
-#ifndef VEHICULO_H
-#define VEHICULO_H
+#ifndef Vehiculo_h
+#define Vehiculo_h
 
 #include <string>
 
+// Esta es la clase "padre" de todos los vehiculos. Aqui pongo todo lo
+// que un automovil y una motocicleta tienen en comun (placa, marca,
+// modelo, etc).
+
 class Vehiculo {
+
+// protected = las clases hijas (Automovil, Motocicleta) si pueden
+// usar estos datos directamente, pero nadie mas afuera.
 protected:
     std::string placa;
     std::string marca;
@@ -13,6 +20,8 @@ protected:
     bool disponible;
 
 public:
+    // Constructor: aqui guardo los datos que todo vehiculo necesita.
+
     Vehiculo(const std::string& placa, const std::string& marca, const std::string& modelo,
               int anio, double precio, bool disponible);
 
@@ -24,7 +33,7 @@ public:
 
     void mostrarDatosComunes() const;
 
-    // Getters
+    // Getters: Para leer los datos sin poder cambiarlos directamente.
     std::string getPlaca() const;
     std::string getMarca() const;
     std::string getModelo() const;
@@ -32,10 +41,10 @@ public:
     double getPrecio() const;
     bool isDisponible() const;
 
-    // Setters
+    // Setters: Solo estos tres se pueden cambiar despues de crear el vehiculo.
     void setPlaca(const std::string& placa);
     void setPrecio(double precio);
     void setDisponible(bool disponible);
 };
 
-#endif // VEHICULO_H
+#endif // Vehiculo_h

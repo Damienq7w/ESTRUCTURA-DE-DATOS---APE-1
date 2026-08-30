@@ -6,7 +6,12 @@
 #include "Automovil.h"
 #include "Motocicleta.h"
 
-// ---------- Prototipos de funciones auxiliares ----------
+// Aqui esta el menu y las funciones que lo mueven. Todo es "static"
+// porque solo se usa dentro de este archivo, no hace falta que se vea
+// desde afuera.
+
+// Prototipos: los declaro arriba para poder usarlos en main() aunque el
+// codigo completo este mas abajo.
 static void registrarAutomovilCiclico(IVehiculoGestor& gestor);
 static void registrarMotocicletaCiclico(IVehiculoGestor& gestor);
 static void modificarVehiculo(IVehiculoGestor& gestor);
@@ -19,16 +24,21 @@ static int leerEntero();
 static int leerEnteroPositivo(const std::string& mensaje);
 static double leerDoubleNoNegativo(const std::string& mensaje);
 
-// Limpia el estado de error de cin y descarta el resto de la linea actual.
+// Si el usuario escribe letras donde yo espero un numero, cin se
+// "traba". Esta funcion lo desatasca para poder volver a preguntar.
 static void limpiarEntradaInvalida() {
     std::cin.clear();
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 }
 
 int main() {
+    // El gestor vive aqui mientras corre el programa. Cuando main()
+    // termina, se destruye solo y libera todos los vehiculos que
+    // hayan quedado guardados, sin que yo tenga que hacer nada extra.
     GestorVehiculos gestor;
     int opcion;
 
+    // El menu se repite hasta que elijo la opcion 6 (salir).
     do {
         std::cout << "\n========================================" << std::endl;
         std::cout << "      SISTEMA DE GESTION VEHICULAR      " << std::endl;
@@ -39,10 +49,11 @@ int main() {
         std::cout << "4. Modificar vehiculo por placa" << std::endl;
         std::cout << "5. Eliminar vehiculo por placa" << std::endl;
         std::cout << "6. Salir" << std::endl;
-        std::cout << "Seleccione una opcion (1-6): ";
+        std::cout << "Seleccione una opcion [1-6]: ";
 
         opcion = leerEntero();
 
+        // Segun lo que elijo, llamo a la funcion que corresponde.
         switch (opcion) {
             case 1:
                 registrarAutomovilCiclico(gestor);
@@ -70,9 +81,11 @@ int main() {
     return 0;
 }
 
+// Deja registrar varios automoviles seguidos, sin volver al menu cada vez.
 static void registrarAutomovilCiclico(IVehiculoGestor& gestor) {
     char repetir;
     do {
+        // Si ya no hay espacio, aviso y me salgo de una vez.
         if (gestor.estaLleno()) {
             std::cout << "AVISO: Capacidad maxima del vector alcanzada (10 vehiculos)." << std::endl;
             return;
@@ -81,20 +94,27 @@ static void registrarAutomovilCiclico(IVehiculoGestor& gestor) {
         std::cout << "\n--- REGISTRO DE AUTOMOVIL ---" << std::endl;
         std::string placa = leerTextoNoVacio("Placa: ");
 
+        // Reviso la placa repetida antes de pedir el resto de datos,
+        // para no hacer llenar todo el formulario si va a fallar.
         if (gestor.buscarPorPlaca(placa) != -1) {
             std::cout << "ERROR: Ya existe un vehiculo con esa placa." << std::endl;
         } else {
             std::string marca = leerTextoNoVacio("Marca: ");
             std::string modelo = leerTextoNoVacio("Modelo: ");
-            int anio = leerEnteroPositivo("Ano: ");
+            int anio = leerEnteroPositivo("Anio: ");
             double precio = leerDoubleNoNegativo("Precio: ");
             bool disponible = leerBooleanoSiNo("Disponible? (1: Si / 2: No): ");
             int puertas = leerEnteroPositivo("Numero de Puertas: ");
             bool electrico = leerBooleanoSiNo("Es electrico? (1: Si / 2: No): ");
 
-            // CONCEPTO: INSTANCIACION DE OBJETOS (con propiedad gestionada por unique_ptr)
+            // Creo el objeto Automovil en memoria. make_unique lo crea y
+            // me da un puntero que soy el unico dueño de ese objeto.
             auto auto_ = std::make_unique<Automovil>(placa, marca, modelo, anio, precio,
                                                        disponible, puertas, electrico);
+
+            // std::move le entrega la propiedad al gestor. Tengo que
+            // usar move porque un unique_ptr no se puede copiar, solo
+            // "pasar de mano en mano" para que siempre tenga un solo dueño.
             if (gestor.registrar(std::move(auto_))) {
                 std::cout << "Automovil registrado exitosamente." << std::endl;
             } else {
@@ -107,6 +127,8 @@ static void registrarAutomovilCiclico(IVehiculoGestor& gestor) {
     } while (repetir == 'S' || repetir == 's');
 }
 
+// Lo mismo que arriba pero para motocicletas, pidiendo cilindrada y maletero
+// en vez de puertas y electrico.
 static void registrarMotocicletaCiclico(IVehiculoGestor& gestor) {
     char repetir;
     do {
@@ -143,6 +165,8 @@ static void registrarMotocicletaCiclico(IVehiculoGestor& gestor) {
     } while (repetir == 'S' || repetir == 's');
 }
 
+// Busco un vehiculo por placa y, si existe, dejo cambiarle el precio y
+// la disponibilidad.
 static void modificarVehiculo(IVehiculoGestor& gestor) {
     std::string placa = leerTextoNoVacio("\nIngrese la placa del vehiculo a modificar: ");
     int indice = gestor.buscarPorPlaca(placa);
@@ -162,6 +186,7 @@ static void modificarVehiculo(IVehiculoGestor& gestor) {
     }
 }
 
+// Busco un vehiculo por placa y, si existe, lo elimino. 
 static void eliminarVehiculo(IVehiculoGestor& gestor) {
     std::string placa = leerTextoNoVacio("\nIngrese la placa del vehiculo a eliminar: ");
     int indice = gestor.buscarPorPlaca(placa);
@@ -178,14 +203,18 @@ static void eliminarVehiculo(IVehiculoGestor& gestor) {
     }
 }
 
-// ---------- Funciones de lectura/validacion de entrada ----------
+// De aqui para abajo son funciones para pedir datos por consola y
+// asegurarme de que lo que escribio el usuario tenga sentido. Cada una
+// repite la pregunta hasta que la respuesta sea valida.
 
+// Pide texto y no lo acepta vacio (ni solo espacios).
 static std::string leerTextoNoVacio(const std::string& mensaje) {
     std::string valor;
     do {
         std::cout << mensaje;
         std::getline(std::cin, valor);
-        // trim basico (equivalente a String.trim() de Java)
+
+        // Le quito espacios de mas al inicio y al final del texto.
         size_t inicio = valor.find_first_not_of(" \t\r\n");
         size_t fin = valor.find_last_not_of(" \t\r\n");
         valor = (inicio == std::string::npos) ? "" : valor.substr(inicio, fin - inicio + 1);
@@ -197,6 +226,8 @@ static std::string leerTextoNoVacio(const std::string& mensaje) {
     return valor;
 }
 
+// Pide S o N (en cualquier combinacion de mayus/minus) y siempre me
+// devuelve "S" o "N" ya en mayuscula, para no complicarme despues.
 static std::string leerRespuestaSiNo(const std::string& mensaje) {
     std::string valor;
     while (true) {
@@ -216,6 +247,8 @@ static std::string leerRespuestaSiNo(const std::string& mensaje) {
     }
 }
 
+// Pide 1 (Si) o 2 (No) y devuelve directamente true/false. Se usa para
+// cosas como "Disponible?", "Electrico?", "Tiene maletero?".
 static bool leerBooleanoSiNo(const std::string& mensaje) {
     std::string valor;
     while (true) {
@@ -231,16 +264,19 @@ static bool leerBooleanoSiNo(const std::string& mensaje) {
     }
 }
 
+// Pide un numero entero (lo uso solo para la opcion del menu).
 static int leerEntero() {
     int valor;
     while (!(std::cin >> valor)) {
         std::cout << "Entrada invalida. Ingrese un numero entero: ";
         limpiarEntradaInvalida();
     }
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // consumir el resto de la linea
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // me quedo sin lo que sobro de la linea
     return valor;
 }
 
+// Como leerEntero(), pero encima no dejo pasar numeros menores o
+// iguales a 0 (para año, puertas, cilindrada, etc).
 static int leerEnteroPositivo(const std::string& mensaje) {
     int valor;
     do {
@@ -257,6 +293,7 @@ static int leerEnteroPositivo(const std::string& mensaje) {
     return valor;
 }
 
+// Pide un decimal que no puede ser negativo (lo uso para el precio).
 static double leerDoubleNoNegativo(const std::string& mensaje) {
     double valor;
     do {
