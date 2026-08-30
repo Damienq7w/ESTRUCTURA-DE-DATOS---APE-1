@@ -1,12 +1,16 @@
 #include "Motocicleta.h"
 #include <iostream>
 
+// Primero armo la parte comun con
+// Vehiculo(...), despues guardo lo propio de la moto.
 Motocicleta::Motocicleta(const std::string& placa, const std::string& marca, const std::string& modelo,
                            int anio, double precio, bool disponible, int cilindrada, bool tieneMaletero)
     : Vehiculo(placa, marca, modelo, anio, precio, disponible),
       cilindrada(cilindrada), tieneMaletero(tieneMaletero) {
 }
 
+// Version de mostrarInformacion() para motocicletas: datos comunes + los
+// datos que solo tiene una motocicleta.
 void Motocicleta::mostrarInformacion() const {
     std::cout << "----------------------------------------" << std::endl;
     std::cout << "Tipo: Motocicleta" << std::endl;
