@@ -1,5 +1,6 @@
 package Scr_Java.Gestor_Vehiculos;
 
+import java.time.LocalDate;
 import java.util.Scanner;
 
 public class MainVehiculos {
@@ -63,11 +64,11 @@ public class MainVehiculos {
             } else {
                 String marca = leerTextoNoVacio("Marca: ");
                 String modelo = leerTextoNoVacio("Modelo: ");
-                int anio = leerEnteroPositivo("Ano: ");
+                int anio = leerAnioValido("Anio: ");
                 double precio = leerDoubleNoNegativo("Precio: ");
-                boolean disponible = leerBooleanoSiNo("Disponible? (1: Si / 2: No): ");
-                int puertas = leerEnteroPositivo("Numero de Puertas: ");
-                boolean electrico = leerBooleanoSiNo("Es electrico? (1: Si / 2: No): ");
+                boolean disponible = leerBooleanoSiNo("Disponible? (1: S / 2: N): ");
+                int puertas = leerEnteroEnRango("Numero de Puertas: ", 2, 6);
+                boolean electrico = leerBooleanoSiNo("Es electrico? (1: Si / 2: N): ");
 
                 // CONCEPTO: INSTANCIACION DE OBJETOS
                 Vehiculo auto = new Automovil(placa, marca, modelo, anio, precio, disponible, puertas, electrico);
@@ -80,7 +81,7 @@ public class MainVehiculos {
 
             String respuesta = leerRespuestaSiNo("\nDesea registrar otro automovil? (S/N): ");
             repetir = respuesta.charAt(0);
-        } while (repetir == 'S');
+        } while (repetir == 'S' || repetir == 's');
     }
 
     private static void registrarMotocicletaCiclico() {
@@ -99,11 +100,11 @@ public class MainVehiculos {
             } else {
                 String marca = leerTextoNoVacio("Marca: ");
                 String modelo = leerTextoNoVacio("Modelo: ");
-                int anio = leerEnteroPositivo("Ano: ");
+                int anio = leerAnioValido("Anio: ");
                 double precio = leerDoubleNoNegativo("Precio: ");
-                boolean disponible = leerBooleanoSiNo("Disponible? (1: Si / 2: No): ");
-                int cilindrada = leerEnteroPositivo("Cilindrada (cc): ");
-                boolean maletero = leerBooleanoSiNo("Tiene maletero? (1: Si / 2: No): ");
+                boolean disponible = leerBooleanoSiNo("Disponible? (1: S / 2: N): ");
+                int cilindrada = leerEnteroEnRango("Cilindrada (cc): ", 50, 2500);
+                boolean maletero = leerBooleanoSiNo("Tiene maletero? (1: S / 2: N): ");
 
                 Vehiculo moto = new Motocicleta(placa, marca, modelo, anio, precio, disponible, cilindrada, maletero);
                 if (gestor.registrar(moto)) {
@@ -115,7 +116,7 @@ public class MainVehiculos {
 
             String respuesta = leerRespuestaSiNo("\nDesea registrar otra motocicleta? (S/N): ");
             repetir = respuesta.charAt(0);
-        } while (repetir == 'S');
+        } while (repetir == 'S' || repetir == 's');
     }
 
     private static void modificarVehiculo() {
@@ -128,7 +129,7 @@ public class MainVehiculos {
         }
 
         double nuevoPrecio = leerDoubleNoNegativo("Nuevo Precio: ");
-        boolean nuevaDisponibilidad = leerBooleanoSiNo("Nueva Disponibilidad? (1: Si / 2: No): ");
+        boolean nuevaDisponibilidad = leerBooleanoSiNo("Nueva Disponibilidad? (1: S / 2: N): ");
 
         if (gestor.modificar(indice, nuevoPrecio, nuevaDisponibilidad)) {
             System.out.println("Vehiculo modificado correctamente.");
@@ -147,7 +148,7 @@ public class MainVehiculos {
         }
 
         if (gestor.eliminar(indice)) {
-            System.out.println("Vehiculo eliminado exitosamente (memoria contigua compactada).");
+            System.out.println("Vehiculo eliminado exitosamente.");
         } else {
             System.out.println("Error al intentar eliminar el vehiculo.");
         }
@@ -185,13 +186,13 @@ public class MainVehiculos {
         do {
             System.out.print(mensaje);
             valor = scanner.nextLine().trim();
-            if (valor.equals("1")) {
+            if (valor.equalsIgnoreCase("S") || valor.equals("1")) {
                 return true;
             }
-            if (valor.equals("2")) {
+            if (valor.equalsIgnoreCase("N") || valor.equals("2")) {
                 return false;
             }
-            System.out.println("ERROR: Ingrese 1 para Si o 2 para No.");
+            System.out.println("ERROR: Ingrese S o N (o 1 para Si y 2 para No).");
         } while (true);
     }
 
@@ -219,6 +220,27 @@ public class MainVehiculos {
                 System.out.println("ERROR: El valor debe ser mayor que 0.");
             }
         } while (valor <= 0);
+        return valor;
+    }
+
+    private static int leerAnioValido(String mensaje) {
+        return leerEnteroEnRango(mensaje, 1900, LocalDate.now().getYear());
+    }
+
+    private static int leerEnteroEnRango(String mensaje, int minimo, int maximo) {
+        int valor;
+        do {
+            System.out.print(mensaje);
+            while (!scanner.hasNextInt()) {
+                System.out.print("Entrada invalida. Ingrese un numero entero: ");
+                scanner.next();
+            }
+            valor = scanner.nextInt();
+            scanner.nextLine();
+            if (valor < minimo || valor > maximo) {
+                System.out.printf("ERROR: El valor debe estar entre %d y %d.%n", minimo, maximo);
+            }
+        } while (valor < minimo || valor > maximo);
         return valor;
     }
 
