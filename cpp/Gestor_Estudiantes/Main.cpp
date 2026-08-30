@@ -1,10 +1,7 @@
-#include "Estudiante.h"
-#include "GestorEstudiantes.h"
+#include "GestorEstudiantes.cpp"
 #include <iostream>
-#include <string>
 #include <regex>
 #include <cstdio>
-#include <ctime>
 #include <cctype>
 #include <algorithm>
 
@@ -69,7 +66,7 @@ int main() {
         std::cout << "3.- Determinar el promedio de notas de un estudiante." << std::endl;
         std::cout << "4.- Determinar el promedio de notas del curso." << std::endl;
         std::cout << "0.- Salir." << std::endl;
-        opcion = leerEntero("Teclee su opción (0-4): ", 0, 4);
+        opcion = leerEntero("Ingrese su opcion (0-4): ", 0, 4);
 
         switch (opcion) {
             case 1: gestionarEstudiantes(); break;
@@ -94,7 +91,7 @@ static void gestionarEstudiantes() {
         std::cout << "2.- Modificar." << std::endl;
         std::cout << "3.- Eliminar." << std::endl;
         std::cout << "4.- Volver al menu principal." << std::endl;
-        opcion = leerEntero("Teclee su opción (1-4): ", 1, 4);
+        opcion = leerEntero("Teclee su opciÃ³n (1-4): ", 1, 4);
 
         switch (opcion) {
             case 1: insertarEstudiantes(); break;
@@ -119,12 +116,12 @@ static void insertarEstudiantes() {
     bool continuar = true;
     while (continuar) {
         if (!gestor.hayCupo()) {
-            std::cout << "Ya se registró el cupo máximo de " << GestorEstudiantes::MAX_ESTUDIANTES
-                       << " estudiantes. No se pueden insertar más." << std::endl;
+            std::cout << "Ya se registrÃ³ el cupo mÃ¡ximo de " << GestorEstudiantes::MAX_ESTUDIANTES
+                       << " estudiantes. No se pueden insertar mÃ¡s." << std::endl;
             return;
         }
 
-        std::string cedula = leerCedulaNueva("Ingrese la cédula del estudiante: ");
+        std::string cedula = leerCedulaNueva("Ingrese la cÃ©dula del estudiante: ");
         std::string nombres = leerTextoNoVacio("Ingrese los nombres: ");
         std::string apellidos = leerTextoNoVacio("Ingrese los apellidos: ");
         int dia, mes, anio;
@@ -133,7 +130,7 @@ static void insertarEstudiantes() {
         gestor.insertar(new Estudiante(cedula, nombres, apellidos, dia, mes, anio));
         std::cout << "Estudiante registrado correctamente." << std::endl;
 
-        continuar = gestor.hayCupo() && leerSiNo("¿Desea insertar otro estudiante? (S/N): ");
+        continuar = gestor.hayCupo() && leerSiNo("Â¿Desea insertar otro estudiante? (S/N): ");
     }
 }
 
@@ -146,7 +143,7 @@ static void modificarEstudiante() {
     bool continuar = true;
     while (continuar) {
         listarEstudiantes();
-        int numero = leerEntero("Ingrese el número del estudiante a modificar: ", 1, gestor.getNumEstudiantes());
+        int numero = leerEntero("Ingrese el nÃºmero del estudiante a modificar: ", 1, gestor.getNumEstudiantes());
         Estudiante* estudiante = gestor.getEstudiante(numero - 1);
 
         std::cout << "Datos actuales: " << estudiante->toString() << std::endl;
@@ -157,7 +154,7 @@ static void modificarEstudiante() {
         estudiante->setFechaNacimiento(dia, mes, anio);
         std::cout << "Estudiante actualizado correctamente." << std::endl;
 
-        continuar = gestor.getNumEstudiantes() > 0 && leerSiNo("¿Desea modificar otro estudiante? (S/N): ");
+        continuar = gestor.getNumEstudiantes() > 0 && leerSiNo("Â¿Desea modificar otro estudiante? (S/N): ");
     }
 }
 
@@ -170,11 +167,11 @@ static void eliminarEstudiante() {
     bool continuar = true;
     while (continuar) {
         listarEstudiantes();
-        int numero = leerEntero("Ingrese el número del estudiante a eliminar: ", 1, gestor.getNumEstudiantes());
+        int numero = leerEntero("Ingrese el nÃºmero del estudiante a eliminar: ", 1, gestor.getNumEstudiantes());
         gestor.eliminar(numero - 1);
         std::cout << "Estudiante eliminado correctamente." << std::endl;
 
-        continuar = gestor.getNumEstudiantes() > 0 && leerSiNo("¿Desea eliminar otro estudiante? (S/N): ");
+        continuar = gestor.getNumEstudiantes() > 0 && leerSiNo("Â¿Desea eliminar otro estudiante? (S/N): ");
     }
 }
 
@@ -182,14 +179,14 @@ static void eliminarEstudiante() {
 
 static void registrarCalificaciones() {
     while (true) {
-        std::string cedula = leerTextoNoVacio("Ingrese la cédula del estudiante: ");
+        std::string cedula = leerTextoNoVacio("Ingrese la cÃ©dula del estudiante: ");
         int indice = gestor.buscar(cedula);
 
         if (indice == -1) {
-            std::cout << "No se encontró ningún estudiante con la cédula " << cedula << "." << std::endl;
-            std::cout << "1.- Ingresar otra cédula." << std::endl;
-            std::cout << "2.- Volver al menú principal." << std::endl;
-            int opcion = leerEntero("Teclee su opción (1-2): ", 1, 2);
+            std::cout << "No se encontrÃ³ ningÃºn estudiante con la cÃ©dula " << cedula << "." << std::endl;
+            std::cout << "1.- Ingresar otra cÃ©dula." << std::endl;
+            std::cout << "2.- Volver al menÃº principal." << std::endl;
+            int opcion = leerEntero("Teclee su opciÃ³n (1-2): ", 1, 2);
             if (opcion == 2) {
                 return;
             }
@@ -215,15 +212,15 @@ static void gestionarNotas(Estudiante* estudiante) {
             return;
         }
 
-        std::cout << "1.- Insertar calificación." << std::endl;
-        std::cout << "2.- Modificar calificación." << std::endl;
-        std::cout << "3.- Eliminar calificación." << std::endl;
-        std::cout << "4.- Volver al menú principal." << std::endl;
-        int opcion = leerEntero("Teclee su opción (1-4): ", 1, 4);
+        std::cout << "1.- Insertar calificaciÃ³n." << std::endl;
+        std::cout << "2.- Modificar calificaciÃ³n." << std::endl;
+        std::cout << "3.- Eliminar calificaciÃ³n." << std::endl;
+        std::cout << "4.- Volver al menÃº principal." << std::endl;
+        int opcion = leerEntero("Teclee su opciÃ³n (1-4): ", 1, 4);
 
         switch (opcion) {
             case 1: {
-                double nota = leerNota("Ingrese la calificación: ");
+                double nota = leerNota("Ingrese la calificaciÃ³n: ");
                 estudiante->agregarNota(nota);
                 if (!estudiante->tieneCupoParaNota()) {
                     listarNotas(estudiante);
@@ -237,11 +234,11 @@ static void gestionarNotas(Estudiante* estudiante) {
                 if (estudiante->getNumNotas() == 0) {
                     std::cout << "El estudiante no tiene calificaciones registradas para modificar." << std::endl;
                 } else {
-                    int numero = leerEntero("Ingrese el número de la calificación a modificar: ",
+                    int numero = leerEntero("Ingrese el nÃºmero de la calificaciÃ³n a modificar: ",
                             1, estudiante->getNumNotas());
-                    double nota = leerNota("Ingrese la nueva calificación: ");
+                    double nota = leerNota("Ingrese la nueva calificaciÃ³n: ");
                     estudiante->modificarNota(numero - 1, nota);
-                    std::cout << "Calificación actualizada correctamente." << std::endl;
+                    std::cout << "CalificaciÃ³n actualizada correctamente." << std::endl;
                 }
                 break;
             }
@@ -249,10 +246,10 @@ static void gestionarNotas(Estudiante* estudiante) {
                 if (estudiante->getNumNotas() == 0) {
                     std::cout << "El estudiante no tiene calificaciones registradas para eliminar." << std::endl;
                 } else {
-                    int numero = leerEntero("Ingrese el número de la calificación a eliminar: ",
+                    int numero = leerEntero("Ingrese el nÃºmero de la calificaciÃ³n a eliminar: ",
                             1, estudiante->getNumNotas());
                     estudiante->eliminarNota(numero - 1);
-                    std::cout << "Calificación eliminada correctamente." << std::endl;
+                    std::cout << "CalificaciÃ³n eliminada correctamente." << std::endl;
                 }
                 break;
             }
@@ -279,11 +276,11 @@ static void listarNotas(Estudiante* estudiante) {
 // ==================== OPCION 3: PROMEDIO DE UN ESTUDIANTE ====================
 
 static void promedioDeUnEstudiante() {
-    std::string cedula = leerTextoNoVacio("Ingrese la cédula del estudiante: ");
+    std::string cedula = leerTextoNoVacio("Ingrese la cÃ©dula del estudiante: ");
     int indice = gestor.buscar(cedula);
 
     if (indice == -1) {
-        std::cout << "No se encontró un estudiante con el número de cédula indicado." << std::endl;
+        std::cout << "No se encontrÃ³ un estudiante con el nÃºmero de cÃ©dula indicado." << std::endl;
         return;
     }
 
@@ -329,7 +326,7 @@ static int leerEntero(const std::string& mensaje, int min, int max) {
             }
             return valor;
         } catch (...) {
-            std::cout << "Entrada inválida. Ingrese un número entero." << std::endl;
+            std::cout << "Entrada invÃ¡lida. Ingrese un nÃºmero entero." << std::endl;
         }
     }
 }
@@ -347,12 +344,12 @@ static double leerNota(const std::string& mensaje) {
                 throw std::invalid_argument("sobran caracteres");
             }
             if (valor < 0 || valor > 10) {
-                std::cout << "La calificación debe estar entre 0 y 10." << std::endl;
+                std::cout << "La calificaciÃ³n debe estar entre 0 y 10." << std::endl;
                 continue;
             }
             return valor;
         } catch (...) {
-            std::cout << "Entrada inválida. Ingrese un número (ej. 8.5)." << std::endl;
+            std::cout << "Entrada invÃ¡lida. Ingrese un nÃºmero (ej. 8.5)." << std::endl;
         }
     }
 }
@@ -367,7 +364,7 @@ static std::string leerTextoNoVacio(const std::string& mensaje) {
         size_t fin = valor.find_last_not_of(" \t\r\n");
         valor = (inicio == std::string::npos) ? "" : valor.substr(inicio, fin - inicio + 1);
         if (valor.empty()) {
-            std::cout << "El valor no puede estar vacío." << std::endl;
+            std::cout << "El valor no puede estar vacÃ­o." << std::endl;
             continue;
         }
         return valor;
@@ -378,11 +375,11 @@ static std::string leerCedulaNueva(const std::string& mensaje) {
     while (true) {
         std::string cedula = leerTextoNoVacio(mensaje);
         if (!std::regex_match(cedula, std::regex("\\d{10}"))) {
-            std::cout << "La cédula debe contener exactamente 10 dígitos numéricos." << std::endl;
+            std::cout << "La cÃ©dula debe contener exactamente 10 dÃ­gitos numÃ©ricos." << std::endl;
             continue;
         }
         if (gestor.buscar(cedula) != -1) {
-            std::cout << "Ya existe un estudiante registrado con esa cédula." << std::endl;
+            std::cout << "Ya existe un estudiante registrado con esa cÃ©dula." << std::endl;
             continue;
         }
         return cedula;
@@ -398,7 +395,7 @@ static bool leerFecha(const std::string& mensaje, int& dia, int& mes, int& anio)
         bool formatoValido = (leidos == 3) && std::regex_match(texto, std::regex("\\d{1,2}/\\d{1,2}/\\d{4}"));
 
         if (!formatoValido || !esFechaValidaCalendario(d, m, a)) {
-            std::cout << "Formato de fecha inválido. Use dd/MM/yyyy (ej. 15/03/2001)." << std::endl;
+            std::cout << "Formato de fecha invÃ¡lido. Use dd/MM/yyyy (ej. 15/03/2001)." << std::endl;
             continue;
         }
         if (esFechaPosteriorAHoy(d, m, a)) {
@@ -428,6 +425,6 @@ static bool leerSiNo(const std::string& mensaje) {
         if (valor == "N") {
             return false;
         }
-        std::cout << "Respuesta inválida. Escriba S o N." << std::endl;
+        std::cout << "Respuesta invÃ¡lida. Escriba S o N." << std::endl;
     }
 }
