@@ -16,8 +16,8 @@ static std::string leerCedulaNueva(const std::string& mensaje);
 static bool leerFecha(const std::string& mensaje, int& dia, int& mes, int& anio);
 static bool leerSiNo(const std::string& mensaje);
 
-// Utilidad interna para validar que una fecha exista en el calendario (no forma parte del Main.java original,
-// pero es necesaria porque Java valida esto automaticamente al usar LocalDate.parse).
+// Utilidad interna para validar que una fecha exista en el calendario
+
 static bool esFechaValidaCalendario(int dia, int mes, int anio) {
     if (mes < 1 || mes > 12 || dia < 1) {
         return false;
