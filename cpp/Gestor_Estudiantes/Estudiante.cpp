@@ -5,7 +5,6 @@
 /**
  * Representa a un estudiante matriculado en el curso.
  * Las calificaciones se almacenan en un vector de tamano fijo (max. 7 notas),
- * junto con un contador que indica cuantas de esas posiciones estan en uso.
  */
 class Estudiante {
 public:
@@ -99,7 +98,7 @@ public:
         return true;
     }
 
-    /** Modifica la calificacion en la posicion indicada (0-based). */
+    /** Modifica la calificacion en la posicion indicada. */
     bool modificarNota(int indice, double nuevaNota) {
         if (indice < 0 || indice >= numNotas) {
             return false;
@@ -108,7 +107,7 @@ public:
         return true;
     }
 
-    /** Elimina la calificacion en la posicion indicada (0-based) y recorre el vector. */
+    /** Elimina la calificacion en la posicion indicada y recorre el vector. */
     bool eliminarNota(int indice) {
         if (indice < 0 || indice >= numNotas) {
             return false;

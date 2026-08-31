@@ -19,7 +19,7 @@ public:
         return numEstudiantes < MAX_ESTUDIANTES;
     }
 
-    /** Devuelve el estudiante en la posicion 0-based del listado, o null si el indice es invalido. */
+    /** Devuelve el estudiante en la posicion del listado, o null si el indice es invalido. */
     Estudiante* getEstudiante(int indice) const {
         if (indice < 0 || indice >= numEstudiantes) {
             return nullptr;
@@ -27,7 +27,7 @@ public:
         return estudiantes[indice];
     }
 
-    /** Busca un estudiante por cedula. Devuelve su indice (0-based) en el vector, o -1 si no existe. */
+    /** Busca un estudiante por cedula. Devuelve su indice en el vector, o -1 si no existe. */
     int buscar(const std::string& cedula) const {
         for (int i = 0; i < numEstudiantes; i++) {
             if (estudiantes[i]->getCedula() == cedula) {
@@ -46,7 +46,7 @@ public:
         return true;
     }
 
-    /** Elimina el estudiante en la posicion 0-based indicada y recorre el vector. */
+    /** Elimina el estudiante en la posicion indicada y recorre el vector. */
     bool eliminar(int indice) {
         if (indice < 0 || indice >= numEstudiantes) {
             return false;
@@ -60,7 +60,7 @@ public:
     }
 
     /**
-     * Promedio general del curso: promedio de los promedios individuales de los
+     * Promedio general del curso: promedios individuales de los
      * estudiantes que tienen al menos una nota registrada.
      * Devuelve -1 si ningun estudiante tiene notas registradas.
      */
