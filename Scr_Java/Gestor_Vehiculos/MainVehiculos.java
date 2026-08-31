@@ -48,6 +48,7 @@ public class MainVehiculos {
         } while (opcion != 6);
     }
 
+    // Esta funcion permite que el registrar vehiculo sea haga con un bucle para poder optimizarlo
     private static void registrarAutomovilCiclico() {
         char repetir;
         do {
