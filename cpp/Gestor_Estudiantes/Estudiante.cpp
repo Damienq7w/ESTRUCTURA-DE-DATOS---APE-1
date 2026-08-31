@@ -4,7 +4,7 @@
 
 /**
  * Representa a un estudiante matriculado en el curso.
- * Las calificaciones se almacenan en un vector de tamano fijo (max. 7 notas),
+ * Las calificaciones se almacenan en un vector de tamano fijo, max 7 notas
  */
 class Estudiante {
 public:
@@ -98,7 +98,7 @@ public:
         return true;
     }
 
-    /** Modifica la calificacion en la posicion indicada. */
+    /** Modifica la calificacion en la posicion indicada */
     bool modificarNota(int indice, double nuevaNota) {
         if (indice < 0 || indice >= numNotas) {
             return false;

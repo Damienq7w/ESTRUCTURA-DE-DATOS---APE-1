@@ -30,8 +30,16 @@ target/
 *.suo
 
 # ========================
-# Entorno / VS Code
+# Entorno / IDEs
 # ========================
-.vscode/
 .idea/
 *.iml
+
+# ========================
+# VS Code
+# ========================
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/c_cpp_properties.json
