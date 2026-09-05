@@ -1,68 +1,96 @@
-# 📊 APE 1 — Gestión de colección de datos utilizando vectores.
+# 📊 APE 2 — Simulador de defensa de torres con colas y pilas
 
-Bienvenidos al repositorio oficial de la **Actividad Práctica Experimental 1 (APE 1)** para la asignatura de **Estructuras de Datos**
+Bienvenidos al repositorio oficial de la **Actividad Práctica Experimental 2 (APE 2)** para la asignatura de **Estructuras de Datos**
 
 ---
 
 ## 📌 ¿De qué trata el proyecto?
 
-Este proyecto implementa y evalúa el almacenamiento, manipulación y cálculo estadístico (media/promedio) de valores estructurados en memoria estática contigua, aplicando los principios fundamentales de la **Programación Orientada a Objetos (POO)** y los **Tipos de Datos Abstractos (TDA)** en **Java** y **C++**.
+Este proyecto implementa un simulador simplificado de un juego de defensa de torres, aplicando **colas** y **pilas** como estructuras lineales especializadas.
 
-El sistema integra dos módulos principales:
+El sistema integra dos mecanismos principales:
 
-1. **Gestor de Estudiantes:** Realiza la insertación de datos de estudiantes, almacenando calificaciones en vectores y calculando el promedio individual y la media general del curso con algoritmos de desplazamiento mecánico para evitar huecos en memoria.
-2. **Gestor de Vehículos:** Modelado de una flota vehicular mediante jerarquía de clases (`Vehiculo`, `Automovil`, `Motocicleta`), clases abstractas, herencia, interfaces (`IVehiculoGestor`) y polimorfismo en tiempo de ejecución.
+1. **Colas (Queue):** Gestionan el movimiento de los enemigos a lo largo de una **ruta predefinida** mediante una **cola circular** que actualiza el estado (PV) de cada enemigo tras cada quantum de tiempo, y gestionan el orden de las oleadas.
+2. **Pilas (Stack):** Implementan el historial de colocación y mejora de torres, permitiendo **deshacer** y **rehacer** acciones del jugador mediante dos pilas complementarias.
+
+Por requisito obligatorio del caso de estudio, la clase que modela al enemigo se llama `Cozy`. El proyecto se implementa **en Java y en C++** (mismo diseño, portado entre lenguajes), y **toda la interfaz es por consola** (sin ventanas ni gráficos).
 
 ---
 
 ## 🎯 Objetivos
 
 * **General:**
-  * Determinar el cálculo de la media de valores estructurados utilizando programación orientada a objetos y vectores.
+  * Desarrollar habilidades en el trabajo con listas secuenciales.
 
 * **Específicos:**
-  * Determinar el cálculo de la media de valores estructurados utilizando programación orientada a objetos y vectores.
-  * Crear una aplicación para registrar y gestionar los datos de los estudiantes mediante programación orientada a objetos.
-  * Almacenar y gestionar las calificaciones de los estudiantes utilizando vectores.
-  * Calcular el promedio de las calificaciones de un estudiante y del curso mediante la aplicación.
+  * Implementar una cola circular que gestione el movimiento y la actualización de PV de los enemigos a lo largo de la ruta predefinida.
+  * Implementar un sistema de pilas para el historial de colocación/mejora de torres con funciones de deshacer y rehacer.
+  * Comparar la implementación de pilas y colas utilizando las clases e interfaces que provee Java (`Stack`, `Deque`, `ArrayDeque`, `Queue`, `LinkedList`).
+  * Diseñar y documentar formalmente el TDA correspondiente (estado, operaciones, invariantes).
+  * Elaborar el informe técnico con el diagrama de clases UML y las pruebas de escritorio del sistema.
 
 ---
 
 ## 🧠 ¿Cómo diseñamos los TDAs y Estructuras?
 
-Seguimos la metodología formal vista en clase:
+Seguimos la metodología formal de análisis de TDA vista en clase: **estado del sistema → operaciones del TDA → invariantes → desarrollo de clases**.
 
-### 1. Módulo Gestor de Estudiantes
-* **Entidad y Atributos:**
-  * `id` (`int`): Identificador único inmutable.
-  * `nombre` (`String` / `std::string`): Nombre del estudiante.
-  * `edad` (`int`): Edad válida ($edad > 0$).
-  * `promedio` (`double`): Calificación estructurada calculada ($0.0 \le promedio \le 10.0$).
-* **Estructura Interna:**
-  * `arreglo`: Vector estático de tamaño fijo para almacenar registros en memoria contigua.
-  * `cantidad` (`int`): Cursor dinámico que delimita el rango útil de datos $[0, cantidad - 1]$.
-* **Cálculo de la Media:**
-  * Cálculo del promedio individual y promedio global del curso iterando sobre las posiciones activas.
+### 1. TDA Cola de enemigos (movimiento y oleadas)
 
-### 2. Módulo Gestor de Vehículos
-* **Jerarquía de Clases y Abstracción:**
-  * `IVehiculoGestor`: Interfaz pura que define el contrato de operaciones (el "Qué").
-  * `Vehiculo`: Clase abstracta que define atributos comunes y métodos virtuales puros (`mostrarInformacion()`).
-  * `Automovil` y `Motocicleta`: Clases derivadas que especializan los atributos y comportamientos.
-* **Polimorfismo:** Manipulación de objetos mediante punteros/referencias a la clase base sin acoplar la implementación interna.
+**Estado del sistema:**
+- `Cozy`: `pv`, `pvMax`, `indiceRuta`, `velocidad`, `recompensa`.
+- `colaCircular`: enemigos activos actualmente en la ruta.
+- `colaOleadas`: oleadas pendientes de introducir, en orden.
+- `Mapa.ruta`: ruta predefinida (fija) que siguen todos los enemigos.
+
+**Operaciones del TDA:**
+
+| Operación | Descripción |
+| :--- | :--- |
+| `encolar(Cozy)` | Ingresa un enemigo a la cola circular de la ruta |
+| `actualizarQuantum()` | Aplica el daño de las torres en rango y avanza cada `Cozy` un paso en la ruta predefinida |
+| `retirarSiMuere(Cozy)` | Excluye de la cola al enemigo cuyo `pv` llega a 0 |
+| `siguienteOleada()` | Extrae la siguiente oleada de `colaOleadas` |
+
+**Invariantes:**
+1. Un `Cozy` permanece en la cola circular únicamente mientras `pv > 0`.
+2. El orden de las oleadas respeta estrictamente FIFO.
+3. La ruta es fija durante toda la partida; la posición de un `Cozy` en ella nunca retrocede.
+
+### 2. TDA Historial de comandos (pilas de deshacer/rehacer)
+
+**Estado del sistema:**
+- `pilaDeshacer`: comandos de colocación/mejora ya ejecutados.
+- `pilaRehacer`: comandos deshechos, disponibles para reaplicar.
+
+**Operaciones del TDA:**
+
+| Operación | Descripción |
+| :--- | :--- |
+| `registrar(ComandoTorre)` | Apila un comando recién ejecutado en `pilaDeshacer` |
+| `deshacer()` | Extrae de `pilaDeshacer`, revierte el efecto y apila el comando en `pilaRehacer` |
+| `rehacer()` | Extrae de `pilaRehacer`, reaplica el efecto y vuelve a apilar en `pilaDeshacer` |
+
+**Invariantes:**
+1. Un mismo comando no puede existir simultáneamente en ambas pilas.
+2. `rehacer()` solo es válido si `pilaRehacer` no está vacía.
+3. Todo `registrar()` nuevo vacía `pilaRehacer` (se pierde el "futuro" deshecho, igual que en cualquier editor de texto).
+4. Una torre nunca puede colocarse sobre una casilla ya ocupada por otra torre.
 
 ---
 
 ## 👥 Equipo de Trabajo
 
+Reparto por lenguaje: el par **Java** (Chalco y Tacuri) y el par **C++** (Tisalema y Silva) construyen el mismo programa completo — no se separa por estructura de datos (cola/pila), sino por archivo, dentro de un solo proyecto por lenguaje.
+
 | Integrante | Rol | ¿Qué hace en el proyecto? |
 | :--- | :--- | :--- |
-| **Cunalata Mendoza Damian Alexander** | Líder Técnico & Dev Java | Gestión del repositorio en GitHub, control de ramas/PRs, integración global y desarrollo del módulo `Gestor_Vehiculos` en Java. |
-| **Chalco Tasna Kenneth Mateo** | Programador Java (Estudiantes) | Desarrollo completo del módulo `Gestor_Estudiantes` en Java (`Estudiante.java`, `GestorEstudiantes.java`, `Main.java`) con validación de entradas y cálculo de promedios. |
-| **Tisalema Guashco Darwin Joel** | Programador C++ (Estudiantes) | Desarrollo completo del módulo `Gestor_Estudiantes` en C++ (`Estudiante.cpp`, `GestorEstudiantes.cpp`, `Main.cpp`) con vectores nativos y menús interactivos. |
-| **Silva Camuendo Luis Alexander** | Programador C++ (Vehículos) | Portabilidad e implementación del módulo `Gestor_Vehiculos` en C++ (`Vehiculo`, `Automovil`, `Motocicleta`, `GestorVehiculos`, `MainVehiculos.cpp`) con herencia y métodos virtuales. |
-| **Tacuri Santillan Mónica Sara** | Documentación Teórica & UML | Redacción del marco metodológico, relación requisitos-código y elaboración de los diagramas de clases UML para ambos módulos. |
-| **Camacho Monta Josue Jampier** | Documentación Técnica & QA | Especificación formal del TDA, invariantes matemáticos, pseudocódigo, pruebas de escritorio y capturas de pruebas de estrés. |
+| **Cunalata Mendoza Damian Alexander** | Líder Técnico & Integración | Gestión del repositorio en GitHub, ensambla `GestorJuego`/`Main` en Java, arma el menú de consola completo, comparación de implementaciones Java (`Stack` vs `ArrayDeque`, `LinkedList` vs `ArrayDeque`) |
+| **Chalco Tasna Kenneth Mateo** | Programador Java | `Coordenada`, `Cozy`, `CatalogoEnemigos`, `Oleada`, `GestorOleadas`, `ColaEnemigos` (cola circular) |
+| **Tacuri Santillan Mónica Sara** | Programadora Java | `Torre`, `TorreArquero`, `TorreCanon`, `CatalogoTorres`, `ComandoTorre` (+ subtipos), `HistorialComandos`, `Mapa` |
+| **Tisalema Guashco Darwin Joel** | Programador C++ | Porta a C++ los mismos archivos que Chalco: `Coordenada`, `Cozy`, `CatalogoEnemigos`, `Oleada`, `GestorOleadas`, `ColaEnemigos` (`std::queue`) |
+| **Silva Camuendo Luis Alexander** | Programador C++ | Porta a C++ los mismos archivos que Tacuri: `Torre`, subtipos, `CatalogoTorres`, `ComandoTorre` (+ subtipos), `HistorialComandos` (`std::stack`), `Mapa` |
+| **Camacho Monta Josue Jampier** | Documentación (único responsable) | Informe completo: diagrama de clases UML, especificación formal del TDA, pruebas de escritorio, comparación teórica pilas vs colas |
 
 ---
 
@@ -71,45 +99,71 @@ Seguimos la metodología formal vista en clase:
 Estructura física del repositorio:
 
 ```text
-ESTRUCTURA-DE-DATOS---APE-1/
+ESTRUCTURA-DE-DATOS---APE-2/
 ├── Scr_Java/
-│   ├── Gestor_Estudiantes/
-│   │   ├── Estudiante.java
-│   │   ├── GestorEstudiantes.java
-│   │   └── Main.java
-│   └── Gestor_Vehiculos/
-│       ├── Automovil.java
-│       ├── GestorVehiculos.java
-│       ├── IVehiculoGestor.java
-│       ├── MainVehiculos.java
-│       ├── Motocicleta.java
-│       └── Vehiculo.java
+│   ├── modelo/
+│   │   ├── Coordenada.java
+│   │   ├── Cozy.java
+│   │   ├── CatalogoEnemigos.java
+│   │   ├── Oleada.java
+│   │   ├── Torre.java
+│   │   ├── TorreArquero.java
+│   │   ├── TorreCanon.java
+│   │   └── CatalogoTorres.java
+│   ├── estructuras/
+│   │   ├── ColaEnemigos.java
+│   │   ├── GestorOleadas.java
+│   │   ├── Mapa.java
+│   │   ├── ComandoTorre.java
+│   │   ├── ComandoColocarTorre.java
+│   │   ├── ComandoMejorarTorre.java
+│   │   └── HistorialComandos.java
+│   ├── gestor/
+│   │   └── GestorJuego.java
+│   └── Main.java
 │
 ├── cpp/
-│   ├── Gestor_Estudiantes/
-│   │   ├── Estudiante.cpp
-│   │   ├── GestorEstudiantes.cpp
-│   │   └── Main.cpp
-│   └── Gestor_Vehiculos/
-│       ├── Automovil.cpp
-│       ├── Automovil.h
-│       ├── GestorVehiculos.cpp
-│       ├── GestorVehiculos.h
-│       ├── IVehiculoGestor.h
-│       ├── MainVehiculos.cpp
-│       ├── Motocicleta.cpp
-│       ├── Motocicleta.h
-│       ├── Vehiculo.cpp
-│       └── Vehiculo.h
+│   ├── modelo/
+│   │   ├── Coordenada.h
+│   │   ├── Coordenada.cpp
+│   │   ├── Cozy.h
+│   │   ├── Cozy.cpp
+│   │   ├── CatalogoEnemigos.h
+│   │   ├── CatalogoEnemigos.cpp
+│   │   ├── Oleada.h
+│   │   ├── Oleada.cpp
+│   │   ├── Torre.h
+│   │   ├── Torre.cpp
+│   │   ├── TorreArquero.h
+│   │   ├── TorreArquero.cpp
+│   │   ├── TorreCanon.h
+│   │   ├── TorreCanon.cpp
+│   │   ├── CatalogoTorres.h
+│   │   └── CatalogoTorres.cpp
+│   ├── estructuras/
+│   │   ├── ColaEnemigos.h
+│   │   ├── ColaEnemigos.cpp
+│   │   ├── GestorOleadas.h
+│   │   ├── GestorOleadas.cpp
+│   │   ├── Mapa.h
+│   │   ├── Mapa.cpp
+│   │   ├── ComandoTorre.h
+│   │   ├── ComandoColocarTorre.h
+│   │   ├── ComandoColocarTorre.cpp
+│   │   ├── ComandoMejorarTorre.h
+│   │   ├── ComandoMejorarTorre.cpp
+│   │   ├── HistorialComandos.h
+│   │   └── HistorialComandos.cpp
+│   ├── gestor/
+│   │   ├── GestorJuego.h
+│   │   └── GestorJuego.cpp
+│   └── main.cpp
 │
 ├── docs/
 │   ├── Capturas_Pruebas/
-│   │   ├── Gestor_Estudiantes/
-│   │   └── Gestor_Vehiculos/
 │   ├── Diagramas_UML/
-│   │   ├── Gestor_Estudiantes/
-│   │   └── Gestor_Vehiculos/
-│   └── Informe_APE1_Estructura_de_Datos.pdf
+│   └── Informe_APE2_Estructura_de_Datos.pdf
 │
 ├── .gitignore
 └── README.md
+```
