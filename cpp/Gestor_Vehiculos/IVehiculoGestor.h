@@ -6,7 +6,7 @@
 #include "Vehiculo.h"
 
 // Esto es como una "lista de tareas obligatorias" para GestorVehiculos.
-// C++ no tiene "interface" como Java, entonces hago una clase donde
+// C++ no tiene "interface" como Java entonces hago una clase donde
 // todos los metodos terminan en "= 0", y quien herede de esta clase
 // SI tiene que escribir el codigo de cada uno.
 class IVehiculoGestor {

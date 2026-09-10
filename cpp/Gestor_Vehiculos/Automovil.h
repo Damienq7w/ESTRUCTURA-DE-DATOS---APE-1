@@ -4,7 +4,7 @@
 #include "Vehiculo.h"
 
 // Automovil hereda de Vehiculo, es decir: ya tiene
-// placa, marca, modelo, etc sin que yo escriba nada, y aqui solo agrego
+// placa, marca modelo, etc sin que yo escriba nada, y aqui solo agrego
 // lo que le falta especificamente a un auto.
 class Automovil : public Vehiculo {
 private:

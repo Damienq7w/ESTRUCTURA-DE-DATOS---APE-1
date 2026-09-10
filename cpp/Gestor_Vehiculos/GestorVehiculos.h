@@ -6,7 +6,7 @@
 #include "IVehiculoGestor.h"
 #include "Vehiculo.h"
 
-// Esta es la clase que de verdad hace el trabajo: guarda los vehiculos
+// Esta es la clase que de verdad hace el trabajo, guarda los vehiculos
 // (maximo 10) y tiene las funciones para registrar, buscar, modificar,
 // eliminar y listar. Como hereda de IVehiculoGestor, tengo que escribir
 // el codigo de los 7 metodos que esa clase promete.

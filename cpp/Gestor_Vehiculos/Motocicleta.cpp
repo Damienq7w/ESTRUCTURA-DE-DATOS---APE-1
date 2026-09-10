@@ -10,7 +10,7 @@ Motocicleta::Motocicleta(const std::string& placa, const std::string& marca, con
 }
 
 // Version de mostrarInformacion() para motocicletas: datos comunes + los
-// datos que solo tiene una motocicleta.
+// datos que solo tiene una motocicleta
 void Motocicleta::mostrarInformacion() const {
     std::cout << "----------------------------------------" << std::endl;
     std::cout << "Tipo: Motocicleta" << std::endl;

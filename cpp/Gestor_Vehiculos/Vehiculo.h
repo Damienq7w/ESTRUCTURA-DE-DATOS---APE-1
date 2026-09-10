@@ -3,7 +3,7 @@
 
 #include <string>
 
-// Esta es la clase "padre" de todos los vehiculos. Aqui pongo todo lo
+// Esta es la clase "padre" de todos los vehiculos, aqui pongo todo lo
 // que un automovil y una motocicleta tienen en comun (placa, marca,
 // modelo, etc).
 

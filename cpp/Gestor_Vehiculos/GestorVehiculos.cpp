@@ -85,7 +85,7 @@ int GestorVehiculos::getCantidad() const {
     return cantidad;
 }
 
-// Devuelvo el vehiculo de esa posicion sin darle la propiedad (solo para consulta).
+// Devuelvo el vehiculo, de esa posicion sin darle la propiedad (solo para consulta).
 Vehiculo* GestorVehiculos::obtenerVehiculo(int indice) const {
     if (indice < 0 || indice >= cantidad) {
         return nullptr;
