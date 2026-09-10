@@ -10,7 +10,7 @@
 // porque solo se usa dentro de este archivo, no hace falta que se vea
 // desde afuera.
 
-// Prototipos: los declaro arriba para poder usarlos en main() aunque el
+// Prototipos, los declaro arriba para poder usarlos en main() aunque el
 // codigo completo este mas abajo.
 static void registrarAutomovilCiclico(IVehiculoGestor& gestor);
 static void registrarMotocicletaCiclico(IVehiculoGestor& gestor);

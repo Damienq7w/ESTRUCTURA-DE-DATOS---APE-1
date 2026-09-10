@@ -2,7 +2,7 @@
 #include <iostream>
 
 // Primero mando los datos comunes al constructor de Vehiculo (para que
-// el "padre" se termine de armar), y despues guardo lo que es solo de
+// el, "padre" se termine de armar), y despues guardo lo que es solo de
 // Automovil (puertas, electrico).
 Automovil::Automovil(const std::string& placa, const std::string& marca, const std::string& modelo,
                        int anio, double precio, bool disponible, int numeroPuertas, bool electrico)

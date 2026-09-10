@@ -3,7 +3,7 @@
 
 #include "Vehiculo.h"
 
-// Hereda todo lo comun de
+// Hereda todo lo comun de,
 // Vehiculo y agrega lo suyo (cilindrada, si tiene maletero).
 class Motocicleta : public Vehiculo {
 private:

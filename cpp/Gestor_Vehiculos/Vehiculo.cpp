@@ -8,7 +8,7 @@ Vehiculo::Vehiculo(const std::string& placa, const std::string& marca, const std
     : placa(placa), marca(marca), modelo(modelo), anio(anio), precio(precio), disponible(disponible) {
 }
 
-// Imprime lo comun de cualquier vehiculo. Automovil y Motocicleta la
+// Imprime lo comun de cualquier vehiculo, automovil y Motocicleta la
 // llaman dentro de su propio mostrarInformacion() para no repetir esto.
 void Vehiculo::mostrarDatosComunes() const {
     std::cout << "Placa: " << placa << std::endl;
